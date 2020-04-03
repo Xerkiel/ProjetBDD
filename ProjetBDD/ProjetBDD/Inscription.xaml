@@ -17,7 +17,7 @@
             <PasswordBox x:Name="passewordBox" FontSize="24"/>
             <Label Foreground="White" Content="Confirmer mot de passe :" FontSize="16" />
             <PasswordBox FontSize="24"/>
-            <Button x:Name="confirm" Content="Terminer l'inscription" Margin="0,20" FontSize="20"/>
+            <Button x:Name="confirm" Content="Terminer l'inscription" Margin="0,20" FontSize="20" Click="confirm_Click"/>
 
         </StackPanel>
 
