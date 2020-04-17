@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace ProjetBDD
 {
-    [Serializable]
     class Cooker
     {
         private int? Id { get; }
@@ -14,7 +13,7 @@ namespace ProjetBDD
         private string tel { get; }
         private string MDP { get; }
 
-        public Cooker(int id, string nom, string tel,string MDP)
+        public Cooker(int id, string nom, string tel, string MDP)
         {
             this.Id = id;
             this.nom = nom;
