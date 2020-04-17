@@ -12,6 +12,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MySql.Data.MySqlClient;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
+using System.IO;
+
 
 namespace ProjetBDD
 {
@@ -26,6 +31,63 @@ namespace ProjetBDD
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            string identifiant = IDBox.Text;
+            string modDePasse = passewordBox.Password;
+
+            string connectionString = "SERVER=localhost;PORT=3306;DATABASE=cooking;UID=root;PASSWORD=Manasoul78130;";
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            connection.Open();
+
+            MySqlCommand command = connection.CreateCommand();
+            command.CommandText = "SELECT * FROM Client;";
+
+            MySqlDataReader reader;
+            reader = command.ExecuteReader();
+
+            bool next = true;
+            bool verif = false;
+
+            while (reader.Read() && next)
+            {
+                if (reader.GetValue(1).ToString() == identifiant && reader.GetValue(3).ToString() == modDePasse)
+                {
+                    Client user = new Client(Convert.ToInt32(reader.GetValue(0)), reader.GetValue(1).ToString(), reader.GetValue(2).ToString(), reader.GetValue(3).ToString(), Convert.ToInt32(reader.GetValue(4)), Convert.ToBoolean(reader.GetValue(5)));
+
+                    FileStream fs = new FileStream("DataFile.dat", FileMode.Create);
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(fs, user);
+                    fs.Close();
+                    connection.Close();
+
+                    Console.WriteLine(Convert.ToInt32(reader.GetValue(0)));
+                    next = false;
+                    verif = true;
+                    this.NavigationService.Navigate(new InterfaceClient());
+                }
+            }
+            //Il faut créer une classe cooker et faire les changements dans le if pour créer un cooker 
+            if(verif == false)
+            {
+                command.CommandText = "SELECT * FROM cooker;";
+                reader = command.ExecuteReader();
+                while (reader.Read() && next)
+                {
+                    if (reader.GetValue(1).ToString() == identifiant && reader.GetValue(3).ToString() == modDePasse)
+                    {
+                        Cooker user = new Cooker(Convert.ToInt32(reader.GetValue(0)), reader.GetValue(1).ToString(), reader.GetValue(2).ToString(), reader.GetValue(3).ToString());
+
+                        FileStream fs = new FileStream("DataFile.dat", FileMode.Create);
+                        BinaryFormatter formatter = new BinaryFormatter();
+                        formatter.Serialize(fs, user);
+                        fs.Close();
+                        connection.Close();
+                        Console.WriteLine(Convert.ToInt32(reader.GetValue(0)));
+                        next = false;
+                        verif = true;
+                        this.NavigationService.Navigate(new InterfaceClient());
+                    }
+                }
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
