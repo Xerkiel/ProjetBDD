@@ -13,6 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MySql.Data.MySqlClient;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
+using System.IO;
 
 
 namespace ProjetBDD
@@ -41,12 +44,29 @@ namespace ProjetBDD
             MySqlDataReader reader;
             reader = command.ExecuteReader();
 
-            while (reader.Read())
+            bool next = true;
+            bool verif = false;
+
+            while (reader.Read() && next)
             {
+                if (reader.GetValue(1).ToString() == identifiant && reader.GetValue(3).ToString() == modDePasse)
+                {
+                    Client user = new Client(Convert.ToInt32(reader.GetValue(0)), reader.GetValue(1).ToString(), reader.GetValue(2).ToString(), reader.GetValue(3).ToString(), Convert.ToInt32(reader.GetValue(4)), Convert.ToBoolean(reader.GetValue(5)));
 
+                    FileStream fs = new FileStream("DataFile.dat", FileMode.Create);
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(fs, user);
+                    fs.Close();
+
+                    Console.WriteLine(Convert.ToInt32(reader.GetValue(0)));
+                    next = false;
+                    verif = true;
+                }
+                else if(verif == false)
+                {
+
+                }
             }
-
-
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
