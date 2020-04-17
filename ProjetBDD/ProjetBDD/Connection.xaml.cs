@@ -57,14 +57,35 @@ namespace ProjetBDD
                     BinaryFormatter formatter = new BinaryFormatter();
                     formatter.Serialize(fs, user);
                     fs.Close();
+                    connection.Close();
 
                     Console.WriteLine(Convert.ToInt32(reader.GetValue(0)));
                     next = false;
                     verif = true;
+                    this.NavigationService.Navigate(new InterfaceClient());
                 }
-                else if(verif == false)
+            }
+            //Il faut créer une classe cooker et faire les changements dans le if pour créer un cooker 
+            if(verif == false)
+            {
+                command.CommandText = "SELECT * FROM cooker;";
+                reader = command.ExecuteReader();
+                while (reader.Read() && next)
                 {
+                    if (reader.GetValue(1).ToString() == identifiant && reader.GetValue(3).ToString() == modDePasse)
+                    {
+                        Cooker user = new Cooker(Convert.ToInt32(reader.GetValue(0)), reader.GetValue(1).ToString(), reader.GetValue(2).ToString(), reader.GetValue(3).ToString());
 
+                        FileStream fs = new FileStream("DataFile.dat", FileMode.Create);
+                        BinaryFormatter formatter = new BinaryFormatter();
+                        formatter.Serialize(fs, user);
+                        fs.Close();
+                        connection.Close();
+                        Console.WriteLine(Convert.ToInt32(reader.GetValue(0)));
+                        next = false;
+                        verif = true;
+                        this.NavigationService.Navigate(new InterfaceClient());
+                    }
                 }
             }
         }

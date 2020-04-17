@@ -16,13 +16,6 @@ namespace ProjetBDD
         private int nbCook { get; }
         private bool CDR { get; }
 
-        public Client()
-        {
-            this.pseudo = "";
-            this.MDP = "";
-            this.tel = "";
-            this.CDR = false;
-        }
         public Client(int id, string pseudo, string tel, string MDP, int nbCook, bool CDR)
         {
             this.Id = id;
